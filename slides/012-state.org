@@ -1,0 +1,50 @@
+
+
+
+
+
+
+
+* States
+
+** New namespace
+
+file:src/demo/state.clj
+#+BEGIN_SRC clojure
+(defn random-vector []
+  (vec (take 100 (repeatedly rand))))
+#+END_SRC
+
+** New benchmark
+
+file:src/demo/core.clj
+#+BEGIN_SRC clojure
+(defn sum [xs]
+  (apply + xs))  
+#+END_SRC
+
+** New key
+
+file:./03-simple-state.edn
+#+BEGIN_SRC clojure
+{:benchmarks
+ [{:fn demo.core/sum :args [:state/vec]}],  ;; <--
+
+ :states
+ {:vec demo.state/random-vector}}
+#+END_SRC
+
+- States produce values for benchmarks (or other states).
+- There's a lot more to states (in a bit).
+
+** Results
+
+$ lein jmh '{:file "./03-simple-state.edn", :fork 1, :format :table}'
+
+:benchmark     :mode        :samples  :score              :score-error
+-------------  -----------  --------  ------------------  ------------
+demo.core/sum  :throughput  5         1127592.453  ops/s  159770.455
+
+- About ~1.1m times per second.
+- Important property: state functions don't affect timing of benchmarks.
+  - Caveat: *most* of the time. (see docs about invocation level states.)

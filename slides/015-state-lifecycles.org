@@ -1,0 +1,84 @@
+
+
+
+
+
+
+
+* State lifecycles
+
+** Example
+
+file:src/demo/state.clj
+#+BEGIN_SRC clojure
+(defn temp-file []
+  (java.io.File/createTempFile "demo" ".tmp"))
+#+END_SRC
+
+file:./05-state-lifecycles.edn
+#+BEGIN_SRC clojure
+{:benchmarks [{:fn #_... :args [:state/temp-file]}]
+ :states
+ {:temp-file
+  {:setup demo.state/temp-file
+   :teardown clojure.java.io/delete-file}}}
+#+END_SRC
+
+$ lein jmh '{:file "./05-state-lifecycles.edn", :mode :single-shot}'
+
+... elided (not relevant)
+
+** More complex example
+
+*** Dummy service
+
+file:src/demo/state.clj
+#+BEGIN_SRC clojure
+(defprotocol IDispose
+  (dispose! [_ resx]))
+
+(defprotocol IResource
+  (-resource [_]))
+
+(defrecord Service []
+  IDispose
+  (dispose! [_])
+  IResource
+  (-resource [_]
+    (reify IDispose (dispose! [_]))))
+#+END_SRC
+
+*** Data file
+
+file:./07-state-lc-map.edn
+#+BEGIN_SRC clojure
+{:benchmarks [{:fn #_... :args [:payload]}]
+ :states
+ {:payload 
+  {:trial {:setup demo.state/payload
+           :teardown demo.state/dispose-service}
+   :invocation {:setup demo.state/with-resource
+                :teardown demo.state/dispose-resource}}}}
+#+END_SRC
+
+*** States
+
+file:src/demo/state.clj
+#+BEGIN_SRC clojure
+(defn payload []
+  {:service (->Service), #_...})
+
+(defn with-resource [{:keys [service] :as payload}]
+  (assoc payload :resource (-resource service)))
+
+(defn dispose-resource [{:keys [resource] :as payload}]
+  (dispose! resource) ;; optional side-effects
+  (dissoc payload :resource))
+
+(defn dispose-service [{:keys [service]}]
+  ;; final lifecycle in the chain, return value is ignored
+  (dispose! service))
+#+END_SRC
+
+
+

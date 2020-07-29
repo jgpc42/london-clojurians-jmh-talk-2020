@@ -1,0 +1,3 @@
+{:benchmarks
+ [{:fn demo.core/spin
+   :options {:mode :throughput, :output-time-unit :seconds}}]}

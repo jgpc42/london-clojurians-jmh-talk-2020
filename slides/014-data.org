@@ -1,0 +1,42 @@
+
+
+
+
+
+
+
+* Benchmarks as data
+
+** Why do this?
+
+- Automatic state management by runtime.
+  + Thread visibilty.
+  + Lifecycles (explained later).
+  + Let harness do the heavy lifting.
+
+- Process forking.
+  + Doesn't work with transient code.
+  + Var symbols must be require-able.
+  + Expression data must be eval-uatable in bare environment.
+
+- The dynamic nature of Clojure is not the norm for most JVM languages.
+
+** Under the hood
+
+Basically,
+
+- ASM to generate class bytecode, adorned with JMH annotations.
+  These use Clojure's Java API to load state/benchmark fns.
+- JMH API reflects upon these classes, writes Java code in memory.
+- Compile sources to disk.
+- Convert option data into objects.
+- Hand it over to JMH runner.
+- Convert result objects into data.
+
+https://github.com/jgpc42/jmh-clojure/wiki/How-It-Works
+https://github.com/jgpc42/jmh-clojure/wiki/Overhead
+
+** Possible future experiments?
+
+- Generating benchmark data programmatically?
+- Even automatically?

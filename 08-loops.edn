@@ -1,0 +1,2 @@
+{:benchmarks [{:fn demo.core/add, :args [:long :long]}]
+ :states {:long demo.state/random-long}}

@@ -1,0 +1,31 @@
+
+
+
+
+
+
+
+* Tutorial
+
+- Don't have time for complete tutorial.
+- jmh-samples source and javadoc are great resources.
+
+http://hg.openjdk.java.net/code-tools/jmh
+
+** Quick aside
+
+Leiningen plugin to ease testing.
+
+file:./project.clj
+#+BEGIN_SRC clojure
+(defproject #_...
+  :profiles
+  {:dev {:plugins [[lein-jmh "0.2.8"]]}
+   :jmh {:jvm-opts []}})
+#+END_SRC
+
+- For lein, make sure to clear its default JVM options.
+- jmh-clojure can also be run via boot, or anything else.
+
+
+

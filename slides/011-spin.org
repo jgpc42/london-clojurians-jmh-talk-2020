@@ -1,0 +1,87 @@
+
+
+
+
+
+
+
+* Modes
+
+** Throughput
+
+file:./02-modes.edn
+#+BEGIN_SRC clojure
+{:benchmarks
+ [{:fn demo.core/spin
+   :options {:mode :throughput, :output-time-unit :seconds}}]}
+#+END_SRC
+
+file:src/demo/core.clj
+#+BEGIN_SRC clojure
+(defn spin []
+  (-> TimeUnit (. MILLISECONDS) (.sleep 100)))
+#+END_SRC
+
+*** Run
+
+$ lein jmh '{:file "./02-spin.edn", :fork 1, :only [:score]}'
+
+{:score [9.306450777073717 "ops/s"]}
+
+- Unsurprisingly, we get ~10 operations per second (ops/s).
+- Quote about throughput mode:
+
+"[it] measures the raw throughput by continuously calling the 
+benchmark method in a time-bound iteration, and counting how 
+many times it executed the method."
+
+*** Notes
+- Iteration = time slice.
+- Period defaults to 10 seconds, with 5 iterations in total.
+- Equal warmup iterations too.
+- So a single run (fork) will take ~100 seconds.
+- Easily altered to fit your workload.
+
+** Average 
+
+$ lein jmh '{#_... :mode :average}'
+
+{:score [0.10741426425531915 "s/op"]}
+
+- No need to change the edn file.
+- As expected, our operation takes about 1/10 second 
+  (seconds per operation: s/op).
+- This is the mode used in the criterium comparison.
+
+** Sample and single-shot
+
+$ lein jmh '{#_... :mode [:single-shot, :sample], :only [:score :mode]}'
+
+({:score [0.10909891895652175 "s/op"], :mode :sample} 
+ {:score [0.1135973 "s/op"], :mode :single-shot})
+
+- Single-shot is useful when developing benchmarks.
+- For more on the these modes, see documentation.
+
+** Convenience feature
+
+$ lein jmh '{#_... :mode [:single-shot, :sample], 
+             :format :table, :status true}'
+
+:benchmark      :mode         :samples  :score       :score-error
+--------------  ------------  --------  -----------  ------------
+demo.core/spin  :sample       460       0.109  s/op  0.001       
+  0.0%                        1         0.107  s/op
+  50.0%                       1         0.109  s/op
+  90.0%                       1         0.110  s/op
+  95.0%                       1         0.111  s/op
+  99.0%                       1         0.112  s/op
+  99.9%                       1         0.114  s/op
+  99.99%                      1         0.114  s/op
+  100.0%                      1         0.114  s/op
+demo.core/spin  :single-shot  1         0.106  s/op
+
+- Special options like :format are provided by lein-jmh.
+- Note: raw JMH output still available via :status option. 
+- I hacked together this ASCII table support in an hour or so, 
+  it's not the prettiest, but it works.

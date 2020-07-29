@@ -1,0 +1,69 @@
+
+
+
+
+
+
+
+* Params
+
+- Can be used with benchmarks and states.
+- JMH concept for dynamic configuration.
+
+** Example
+
+*** Pair of fns
+
+file:src/demo/core.clj
+#+BEGIN_SRC clojure
+(defn hashcode [^ints arr]
+  (java.util.Arrays/hashCode arr))
+
+(defn hasheq [^ints arr]
+  (hash arr))
+#+END_SRC
+
+*** Specification
+
+file:./09-params.edn
+#+BEGIN_SRC clojure
+{:benchmarks 
+ [{:ns demo.core
+   :fn [hasheq, hashcode]
+   :args [:int-array]}]
+
+ :states 
+ {:int-array {:fn (comp int-array range)
+              :args [:param/size]}}
+
+ :params {:size 100}} 
+#+END_SRC
+
+- Params can be any readable (edn) value.
+
+** Run
+
+$ lein jmh '{:file "./09-params.edn", :format :table, #_...}'
+
+:benchmark          :score               :params
+------------------  -------------------  -----------
+demo.core/hasheq    31011072.631  ops/s  {:size 100}
+demo.core/hashcode  7770660.832   ops/s  {:size 100}
+
+** Override
+
+$ lein jmh '{:file "./09-params.edn", :params {:size [1000, 1000000]}, #_...}'
+
+*** Result
+
+:benchmark          :score               :params
+------------------  -------------------  ---------------
+demo.core/hasheq    30664669.734  ops/s  {:size 1000}
+demo.core/hasheq    30332327.195  ops/s  {:size 1000000}
+demo.core/hashcode  792907.548    ops/s  {:size 1000}
+demo.core/hashcode  758.245       ops/s  {:size 1000000}
+
+- Params given to runner override existing, 
+  and new ones merged to form complete params.
+- Can be sequence of values.
+- We can see here that Clojure's `hash` is just .hashCode for arrays.

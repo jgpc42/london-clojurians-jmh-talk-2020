@@ -1,0 +1,16 @@
+{:benchmarks
+ [{:name :str, :fn demo.core/value-at, :args [:state/string, :state/mid-point]}
+  {:name :vec, :fn demo.core/value-at, :args [:state/vector, :state/mid-point]}
+  {:name :istr, :fn demo.core/value-at-iface, :args [:state/wstring, :state/mid-point]}
+  {:name :ivec, :fn demo.core/value-at-iface, :args [:state/wvector, :state/mid-point]}
+  {:name :pstr, :fn demo.core/value-at, :args [:state/wstring, :state/mid-point]}
+  {:name :pvec, :fn demo.core/value-at, :args [:state/wvector, :state/mid-point]}]
+
+ :states
+ {:string {:fn demo.utils/make-str, :args [:param/count]}
+  :vector {:fn demo.utils/make-vec, :args [:param/count]}
+  :wstring {:fn demo.utils/make-wstr, :args [:param/count]}
+  :wvector {:fn demo.utils/make-wvec, :args [:param/count]}
+  :mid-point {:fn (partial * 0.5), :args [:param/count]}}
+
+ :params {:count 10}}

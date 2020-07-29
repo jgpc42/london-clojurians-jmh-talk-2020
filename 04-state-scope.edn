@@ -1,0 +1,7 @@
+{:benchmarks
+ [{:name :contended, :fn demo.core/reset-atom, :args [:state/global]}
+  {:name :uncontended, :fn demo.core/reset-atom, :args [:state/local]}]
+
+ :states
+ {:global {:fn (partial atom nil), :scope :benchmark}
+  :local {:fn (partial atom nil), :scope :thread}}}

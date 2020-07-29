@@ -1,0 +1,53 @@
+
+
+
+
+
+
+
+* JMH
+
+** Data representation
+
+#+BEGIN_SRC clojure
+{:benchmarks
+ [{:name :str, :fn demo.core/value-at, :args [:state/string, :state/mid-point]}
+  {:name :vec, :fn demo.core/value-at, :args [:state/vector, :state/mid-point]}]
+
+ :states
+ {:string {:fn demo.utils/make-str, :args [:param/count]}
+  :vector {:fn demo.utils/make-vec, :args [:param/count]}
+  :mid-point {:fn (partial * 0.5), :args [:param/count]}}
+
+ :params {:count 10}}
+#+END_SRC
+
+- More explicit data representation of the benchmarks.
+
+** Excerpt
+
+#+BEGIN_SRC clojure
+(let [#_...
+      env (-> "benchmarks.edn" io/resource 
+              slurp edn/read-string)
+      opts {:params {:count count}, :select name, #_...}
+      result (jmh/run env opts)]
+  #_...)
+#+END_SRC
+
+- Not passing function (thunk) to benchmark.
+
+** Sample of results
+
+$ clj -m bench :jmh
+
+| Type   |   Size | Mean (ns) |
+|--------+--------+-----------|
+| string |     31 |    10.693 |
+| string | 100000 |    10.695 |
+| vector |     31 |    10.617 |
+| vector | 100000 |    18.166 |
+
+- Here, we see slightly different results than criterium.
+
+We'll come back to this too in a bit.

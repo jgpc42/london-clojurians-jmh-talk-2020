@@ -1,0 +1,15 @@
+
+
+
+
+
+
+
+* Prelude
+
+- This talk is not about teaching you to write fast code.
+
+- Benchmarking is hard. Especially on the JVM.
+
+- Terminology: test ~~ benchmark for this talk.
+

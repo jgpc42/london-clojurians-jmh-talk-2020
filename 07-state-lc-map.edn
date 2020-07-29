@@ -1,0 +1,8 @@
+{:benchmarks [{:fn clojure.core/identity, :args [:payload]}]
+
+ :states
+ {:payload
+  {:trial {:setup demo.state/payload
+           :teardown demo.state/dispose-service}
+   :invocation {:setup demo.state/with-resource
+                :teardown demo.state/dispose-resource}}}}

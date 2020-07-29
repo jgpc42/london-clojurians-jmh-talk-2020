@@ -1,0 +1,30 @@
+
+
+
+
+
+
+
+* A simple protocol
+
+file:src/demo/core.clj
+#+BEGIN_SRC clojure
+(defprotocol ValueAt
+  (value-at [x idx]))
+
+(extend-protocol ValueAt
+
+  clojure.lang.Indexed
+  (value-at [i idx]
+    (.nth i idx))
+
+  CharSequence
+  (value-at [s idx]
+    (.charAt s idx)))
+
+(comment
+  (value-at [:a :b :c] 1)              ;=> :b
+  (= (nth "abc" 2) (value-at "abc" 2)) ;=> true
+)
+#+END_SRC
+

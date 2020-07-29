@@ -1,0 +1,23 @@
+
+
+
+
+
+
+
+Links:
+
+- All materials from this talk will eventually be available at:
+
+  https://github.com/jgpc42/london-clojurians-jmh-talk-2020
+
+- More on JMH/jmh-clojure:
+
+  http://hg.openjdk.java.net/code-tools/jmh/
+  https://github.com/jgpc42/jmh-clojure/wiki
+
+- Some blogs I've found useful on this topic:
+
+  https://shipilev.net/
+  https://mechanical-sympathy.blogspot.com/
+  https://psy-lob-saw.blogspot.com/

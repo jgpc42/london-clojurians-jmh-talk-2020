@@ -1,0 +1,8 @@
+{:benchmarks
+ [demo.core/do-nothing
+  {:name :add, :fn demo.core/add, :args [:long :long]}
+  {:name :zero, :fn demo.core/return-zero}
+  {:name :void, :fn demo.core/do-nothing, :void true}]
+
+ :states
+ {:long demo.state/random-long}}

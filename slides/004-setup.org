@@ -1,0 +1,31 @@
+
+
+
+
+
+
+
+* Setup
+
+** Example
+
+- Not realistic.
+- Just a demonstration.
+
+** Environment
+
+- Clojure 1.10.1
+- criterium 0.4.6
+- jmh-clojure 0.3.1 (uses JMH 1.23)
+- 4 benchmarks, 10 full runs (40 results in total).
+
+** Don't take my word for it
+
+- Only 4 (representative) samples of the 40 runs.
+- Full code and raw datasets will be available.
+- Do compare with my results.
+
+** Time constraints
+
+- This took hours.
+- Not going to run anything real time.

@@ -1,0 +1,54 @@
+
+
+
+
+
+
+
+* Loops
+
+Once again:
+
+file:src/demo/core.clj
+#+BEGIN_SRC clojure
+(defn add ^long [^long a ^long b]
+  (unchecked-add a b))
+#+END_SRC
+
+And the benchmark data:
+
+file:src/demo/core.clj
+#+BEGIN_SRC clojure
+{:benchmarks [{:fn demo.core/add, :args [:long :long]}]
+ :states {:long demo.state/random-long}}
+#+END_SRC
+
+Try to offset the framework/function overhead by doing work in a loop?
+
+*** Maybe something like this?
+
+#+BEGIN_SRC clojure
+(defn add-in-loop ^long [^long a ^long b]
+  (loop [res 0
+         rem 100] ;; arbitrary
+    (if (zero? rem)
+      res
+      (recur (unchecked-add res (unchecked-add a b)) ;; <--
+             (unchecked-dec rem)))))
+#+END_SRC
+
+- Under most circumstances, don't do things like this.
+- If you know what you're doing, use :ops-per-invocation option.
+- To quote JMH docs:
+
+"... you will see there is more magic happening 
+when we allow optimizers to merge the loop iterations."
+
+*** Inlining
+
+- Inlining commands in: /META-INF/CompilerHints
+  + Passed to forks via standard '-XX:CompileCommandFile=' option.
+- Quote:
+
+"... don't overuse loops, 
+rely on JMH to get the measurement right."

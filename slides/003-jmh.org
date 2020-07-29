@@ -1,0 +1,20 @@
+
+
+
+
+
+
+
+[when microbenchmarking] 
+"Use jmh.
+ Use jmh.
+ Use jmh.
+ And even then, suspect everything."
+ 
+   - Gil Tene, CTO, Azul Systems
+       "Java at Speed" - 2018
+       https://www.infoq.com/presentations/java-jvm-perf/   
+
+* 
+https://github.com/jgpc42/jmh-clojure
+- Idiomatic Clojure bridge to JMH.

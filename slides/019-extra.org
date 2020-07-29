@@ -1,0 +1,87 @@
+
+
+
+
+
+
+
+* Extra
+
+Quite a bit more to JMH/jmh-clojure.
+
+Some highlights:
+
+** Selector keywords
+
+#+BEGIN_SRC clojure
+{:benchmarks [#_...]
+ :selectors
+ {:non-void (complement :void)
+  :sum (comp #{"sum"} name :fn)}}
+#+END_SRC
+
+- Like Leiningen test selectors.
+- Run like:
+
+$ lein jmh '{:select :sum, #_...}'
+
+** Option sets
+
+#+BEGIN_SRC clojure
+{:benchmarks 
+ [{:fn my.bench/fn-1, :options [:fast]}
+  {:fn my.bench/fn-2, :options [:stress {:threads 8}]}]
+
+ :options 
+ {:jmh/default {:output-time-unit :ms}
+  :fast {:mode :single-shot, :fork 1}
+  :stress {:mode :all}}}
+#+END_SRC
+
+- Shortcuts for common groups of options.
+- Default options given with :jmh/default key.
+- Again, can still override these defaults when running.
+- Much better than annotations.
+
+** Customize forks
+
+#+BEGIN_SRC clojure
+{#_...
+ :fork {:jvm {:args ["-Dclojure.compiler.direct-linking=true"]}}}
+#+END_SRC
+
+** Special JMH values
+
+#+BEGIN_SRC clojure
+{:benchmarks 
+ [{:fn my.bench/advanced
+   :args [:jmh/blackhole
+          :jmh/benchmark-params
+          :jmh/control
+          #_etc.]}]}
+#+END_SRC
+
+- Also, the :apply flag.
+- Most all the knobs of JMH exposed via data abstraction.
+
+** Other JVM languages.
+
+States or benchmarks from Java/Kotlin/etc. are supported.
+
+*** Benchmarks
+
+Include via :externs key:
+
+$ lein jmh '{#_..., :externs [org.my.pkg.Bench]}'
+
+- Useful to compare performance of Java vs Clojure, etc.
+
+*** States
+
+#+BEGIN_SRC clojure
+{:benchmarks [#_...]
+ :states {:counters org.my.pkg.PerfCounters}}
+#+END_SRC
+
+- Necessary for a few advanced things like @AuxCounters.
+

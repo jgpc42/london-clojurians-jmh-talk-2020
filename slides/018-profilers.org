@@ -1,0 +1,79 @@
+
+
+
+
+
+
+
+* Profilers
+
+** What's available
+
+$ lein jmh :profilers
+
+:name       :desc
+----------  -----------------------------------------------------------------------------
+cl          Classloader profiling via standard MBeans
+comp        JIT compiler profiling via standard MBeans
+gc          GC profiling via standard MBeans
+hs_cl       HotSpot (tm) classloader profiling via implementation-specific MBeans
+hs_comp     HotSpot (tm) JIT compiler profiling via implementation-specific MBeans
+hs_gc       HotSpot (tm) memory manager (GC) profiling via implementation-specific MBeans
+hs_rt       HotSpot (tm) runtime profiling via implementation-specific MBeans
+hs_thr      HotSpot (tm) threading subsystem via implementation-specific MBeans
+pauses      Pauses profiler
+safepoints  Safepoints profiler
+stack       Simple and naive Java stack profiler
+
+- Not replacements for a real profiler.
+
+** Example
+
+(Vector sum benchmark from before.)
+
+$ lein jmh '{:file "./03-simple-state.edn", :profilers ["gc"], #_...}'
+
+:benchmark                         :score               
+---------------------------------  -------------------  
+demo.core/sum                      1284970.912  ops/s   
+  gc.alloc.rate                    3302.916     MB/sec  
+  gc.alloc.rate.norm               2832.266     B/op    
+  gc.churn.G1_Eden_Space           3307.698     MB/sec  
+  gc.churn.G1_Eden_Space.norm      2836.352     B/op    
+  gc.churn.G1_Survivor_Space       0.003        MB/sec  
+  gc.churn.G1_Survivor_Space.norm  0.003        B/op    
+  gc.count                         3731.000     counts  
+  gc.time                          1890.000     ms      
+
+- Explaining this in detail is beyond scope of talk.
+
+** Custom external profilers
+
+- I prefer JDK (formerly, Java) Flight Recorder.
+
+- Now part of OpenJDK (newer versions). 
+  Previously, Oracle-branded only.
+
+- Basic demo implementation included in talk repo.
+  (Works with my local OpenJDK 14 install)
+
+- ~60 lines of Clojure with :gen-class. 
+
+*** Try it out
+
+$ lein compile
+$ lein jmh '{:file "./03-simple-state.edn"
+             :profilers [demo.jfr.ExampleProfiler]
+             :status true, :verbose true, #_...}'
+$ ls *.jfr
+1595294323420.jfr 
+
+- Generates a profiler dump file.
+
+https://github.com/jgpc42/jmh-clojure/wiki/JMH-Profilers
+
+*** JMC
+
+$ /path/to/jmc 1595294323420.jfr 
+
+- Now part of OpenJDK (newer versions), too.

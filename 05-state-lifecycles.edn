@@ -1,0 +1,5 @@
+{:benchmarks [{:fn clojure.core/identity :args [:state/temp-file]}]
+ :states
+ {:temp-file
+  {:setup demo.state/temp-file
+   :teardown clojure.java.io/delete-file}}}

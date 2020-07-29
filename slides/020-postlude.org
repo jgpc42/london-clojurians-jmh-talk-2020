@@ -1,0 +1,43 @@
+
+
+
+
+
+
+
+* Final thoughts
+
+** Tradeoffs
+
+Not simple...
+
+... because these modern VMs are not simple.
+
+Lots of options.
+
+Takes a bit of effort to learn and use properly.
+
+** JVM
+
+Doing this correctly on the JVM *is* more difficult.
+
+Be prepared to do some spelunking.
+
+Again, tradeoffs vs. static environment.
+
+We should still strive for efficient, fast code. 
+
+** JMH
+
+Consider a gold-standard tool by which others are measured.
+
+criterium and others are still very good.
+
+JMH is not a panacea.
+
+** Caveat
+
+Your results may vary.
+
+
+

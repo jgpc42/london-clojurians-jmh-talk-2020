@@ -1,0 +1,10 @@
+{:benchmarks
+ [{:ns demo.core
+   :fn [hasheq, hashcode]
+   :args [:int-array]}]
+
+ :states
+ {:int-array {:fn (comp int-array range)
+              :args [:param/size]}}
+
+ :params {:size 100}}

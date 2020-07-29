@@ -1,0 +1,5 @@
+{:benchmarks
+ [{:fn demo.core/sum :args [:state/vec]}],
+
+ :states
+ {:vec demo.state/random-vector}}

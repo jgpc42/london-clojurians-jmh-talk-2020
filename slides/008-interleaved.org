@@ -1,0 +1,108 @@
+
+
+
+
+
+
+
+* Interleaved
+
+- Before: S,S,V,V
+- Now:    S,V,S,V
+
+** Criterium sample
+
+$ clj -m bench :criterium :interleaved
+
+*** Before
+
+| Type   |   Size | Mean (ns) |
+|--------+--------+-----------|
+| string |     31 |     6.931 |
+| string | 100000 |     6.920 |  <--
+| vector |     31 |    11.865 |
+| vector | 100000 |    19.339 |
+
+*** Now
+
+| Type   |   Size | Mean (ns) |
+|--------+--------+-----------|
+| string |     31 |     6.644 |
+| vector |     31 |    11.984 |  
+| string | 100000 |    11.705 |  <--
+| vector | 100000 |    20.525 |
+
+*** Vector first: V,S,V,S
+
+| Type   |   Size | Mean (ns) |
+|--------+--------+-----------|
+| vector |     31 |     7.983 |  <--
+| string |     31 |    11.507 |
+| vector | 100000 |    19.235 |
+| string | 100000 |    11.663 |
+
+- Overall, through 10 runs, results vary quite a bit.
+
+** JMH Sample
+
+$ clj -m bench :jmh :interleaved
+
+*** Before
+
+| Type   |   Size | Mean (ns) |
+|--------+--------+-----------|
+| string |     31 |    10.693 |
+| string | 100000 |    10.695 |
+| vector |     31 |    10.617 |
+| vector | 100000 |    18.166 |
+
+*** Now
+
+| Type   |   Size | Mean (ns) |
+|--------+--------+-----------|
+| string |     31 |    10.585 |
+| vector |     31 |    10.653 |
+| string | 100000 |    10.680 |
+| vector | 100000 |    18.384 |
+
+- Isolated benchmark processes.
+- The point: much more consistency.
+
+** Grain of salt
+
+- Just an example.
+- Results vary depending on hardware.
+- Exact numbers not really important.
+- Again, demonstration of larger issue.
+- Quote from JMH docs:
+
+"JVMs are notoriously good at profile-guided optimizations. 
+This is bad for benchmarks, because different tests can mix
+their profiles together, and then render the "uniformly bad" 
+code for every test. Forking (running in a separate process) 
+each test can help to evade this issue."
+
+** It's all relative
+
+- This is not necessarily JVM-specific. 
+- See Haskell's criterion library, which inspired criterium.
+- Quotes from two related (open) issues on github:
+
+*** Excerpt
+  "It seems my problem was due to the sharing of input data 
+across benchmarks which caused undue memory pressure for 
+the later benchmarks."
+- https://github.com/bos/criterion/issues/60
+  "#60 A benchmark's runtime can depend
+       on the presence or absence of other benchmarks"
+
+*** Excerpt
+  "The fix runs each benchmark in a separate process."
+- https://github.com/bos/criterion/issues/166
+  "#166 When using multiple benchmarks, earlier ones
+        affect the ones coming later"
+
+*** Interesting
+- This sounds eerily familiar...
+- Haskell does *not* do JIT compilation.
+

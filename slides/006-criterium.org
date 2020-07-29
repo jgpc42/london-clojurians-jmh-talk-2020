@@ -1,0 +1,38 @@
+
+
+
+
+
+
+
+* Criterium
+
+** Excerpt
+
+#+BEGIN_SRC clojure
+(let [#_...
+      idx (* 0.5 count)                   ;; mid-point
+      val (make count)                    ;; value of the given size
+      ^IFn value-at @#'demo.core/value-at ;; avoid var indirection
+      benchmark (fn [] (value-at val idx)) 
+      result (criterium/benchmark* benchmark {})]
+  #_...)
+#+END_SRC
+
+** Sample of results
+
+$ clj -m bench :criterium
+
+| Type   |   Size | Mean (ns) |
+|--------+--------+-----------|
+| string |     31 |     6.931 |
+| string | 100000 |     6.920 |
+| vector |     31 |    11.865 |
+| vector | 100000 |    19.339 |
+
+- Estimation of execution in nanoseconds.
+- Lower is better.
+- Protocol performs pretty well.
+
+We'll come back to this in a second.
+

@@ -1,0 +1,40 @@
+
+
+
+
+
+
+
+* Background
+
+I've done a lot of benchmarking in Clojure.
+
+https://github.com/jgpc42/insn
+
+** Should be simple, right?
+
+Multiple buffer implementations:
+
+- Raw byte arrays.
+- Immutable chunks.
+- etc.
+- how do they perform relative to each other?
+
+https://github.com/hugoduncan/criterium
+
+- The standard for Clojure.
+- For my workload: consistently inconsistent results.
+
+** Challenges on the JVM
+
+- Problematic configuration?
+- Hidden allocations?
+- Unexpected outliers?
+- Something else?
+
+** Solution?
+
+- Start a new JVM process for each benchmark. (?)
+- Better (for the most part).
+
+Still didn't feel very good about this...

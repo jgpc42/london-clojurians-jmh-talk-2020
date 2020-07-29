@@ -1,0 +1,10 @@
+.\#*
+.dir-locals.el
+notes.txt
+hotspot_*.log
+.lein-*
+.nrepl-*
+.cpcache/
+classes/
+target/
+test/
